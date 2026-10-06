@@ -1,25 +1,50 @@
 # Retail SQL Analytics
 
-SQL case study focused on revenue, customer behavior, product performance, and repeat purchasing using a deterministic synthetic retail dataset.
+I made this project to practice answering business questions directly in SQL instead of doing the analysis first in pandas.
 
-## Business questions
-- How is revenue trending by month?
+The dataset is synthetic by design: it gives me a small, reproducible retail schema with customers, products, and orders that I can rebuild locally and query from scratch. The numbers below are therefore **SQL exercise results, not real company performance**.
+
+## Questions I worked through
+
+- How is revenue changing month to month?
 - Which product categories contribute the most revenue?
 - Who are the highest-value customers?
-- What percentage of customers purchase more than once?
+- What share of purchasing customers ordered more than once?
 - How do regions compare on revenue and average order value?
-- How does discount usage affect order economics?
+- What does discount usage look like?
+- How can products be ranked within category?
+- How can customers be segmented into spend quartiles?
 
-## Tools
-**SQL · SQLite/PostgreSQL-compatible concepts · CTEs · Window Functions · Aggregations · Joins · Python · pandas**
+## Dataset
 
-## Dataset snapshot
+The generator creates:
+
 - **900** order records
 - **220** customers
 - **12** products across four categories
-- Deterministic synthetic data generated locally; no private company data
+- one year of order dates
+- quantity and discount variation
 
-## Repository structure
+A fixed random seed is used so the same data and results can be reproduced.
+
+## Results snapshot
+
+- Total order lines: **900**
+- Total revenue: **$85,032.45**
+- Average order value: **$94.48**
+- Highest-revenue category: **Electronics ($44,947.00)**
+- Repeat-customer rate in the generated data: **92.2%**
+
+That repeat rate is intentionally treated as a property of the generated sample—not as a realistic retail benchmark.
+
+## SQL covered
+
+The query set uses joins, grouped KPIs, CTEs, `DENSE_RANK()`, `NTILE()`, customer-level aggregation, and repeat-purchase logic.
+
+I kept a SQLite-oriented query file for quick local use and added a PostgreSQL version so the date functions match the database instead of pretending the syntax is identical.
+
+## Files
+
 ```text
 retail-sql-analytics/
 ├── src/
@@ -27,27 +52,28 @@ retail-sql-analytics/
 │   └── build_results.py
 ├── sql/
 │   ├── schema.sql
-│   └── analysis_queries.sql
+│   ├── analysis_queries.sql
+│   └── analysis_queries_postgres.sql
 ├── results/
 │   └── summary.md
+├── requirements.txt
 └── README.md
 ```
 
-## Run
+## Run it
+
 ```bash
-pip install pandas numpy
+pip install -r requirements.txt
 python src/generate_data.py
 python src/build_results.py
 ```
 
-Then load the generated CSVs into SQLite/PostgreSQL and run the queries in `sql/analysis_queries.sql`.
+`sql/analysis_queries.sql` uses SQLite date syntax. Use `sql/analysis_queries_postgres.sql` when loading the same generated tables into PostgreSQL.
 
-## Current results snapshot
-- Total order lines: **900**
-- Total revenue: **$85,032.45**
-- Average order value: **$94.48**
-- Top category by revenue: **Electronics ($44,947.00)**
-- Repeat-customer rate: **92.2%**
+## Stack
 
-## What this demonstrates
-Relational thinking, joins, KPI calculations, CTEs, window functions, ranking, customer segmentation, repeat-purchase analysis, and translating business questions into reusable SQL.
+SQL · SQLite · PostgreSQL · Python · pandas
+
+## What I would change with real retail data
+
+With a real transactional dataset, I would spend more time validating order grain, returns/cancellations, customer identity, product history, and the definition of “repeat customer” before turning these queries into business KPIs.
