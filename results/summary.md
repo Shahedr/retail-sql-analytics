@@ -6,4 +6,4 @@
 - Top category by revenue: **Electronics ($44,947.00)**
 - Repeat-customer rate: **92.2%**
 
-Generated from the deterministic synthetic dataset in `src/generate_data.py`.
+These figures come from the reproducible practice dataset created by `src/generate_data.py`. They are useful for checking the SQL logic, not as real retail benchmarks.
